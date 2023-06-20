@@ -6,7 +6,10 @@ def p(msg):
     for i in msg:
         sys.stdout.flush()
         sys.stdout.write(i)
-        time.sleep(0.0005)
+        if (i == " "):
+            continue
+        else:
+            time.sleep(0.000000000001)
     print()
 
 def stock(stockName):
@@ -62,8 +65,18 @@ def previousDay(stockName):
         return None
     b = ticker.history(period="1day")
     p(str(b))
+    
+def previousYear(stockName):
+    try:
+        ticker = yf.Ticker(stockName)
+    except:
+        p('unknown stock ticker name')
+        return None
+    b = ticker.history(period="1y")
+    p(str(b))
 
 def getAbbv():
+    p('Examples: ')
     p('GOOGL - google')
     p('MSFT - microsoft')
     p('INTC - intel')
@@ -77,6 +90,14 @@ def getAbbv():
     p('COST - costco')
     p('DIS - Disney')
     
+def help():
+    p('stock|get|stockinfo <stockname> [getpreviousinfo:week|month|day]     get stock info about a specific stock')
+    p('stockname is required, getprevious info is optional')
+    p('names|stocks|abbr                                                    shows list of popular stocks')
+    p('cls|clear                                                            clear terminal')
+    p('exit                                                                 exits')
+    
+help()
 while True: #loop
     cmd = input('> ').lower()
     cmdsplit = cmd.split(" ")
@@ -91,6 +112,8 @@ while True: #loop
                     previousMonth(cmdsplit[1])
                 elif cmdsplit[2] == "--getday" or cmdsplit[2] == "--previousday" or cmdsplit[2] == "--day" or cmdsplit[2] == "--lastday":
                     previousDay(cmdsplit[1])
+                elif cmdsplit[2] == "--getyear" or cmdsplit[2] == "--previousyear" or cmdsplit[2] == "--year" or cmdsplit[2] == "--lastyear":
+                    previousYear(cmdsplit[1])
                 else:
                     p('Unknown command: ' + str(cmd[2]))
             except IndexError:
@@ -104,9 +127,6 @@ while True: #loop
     elif cmdsplit[0] == "cls" or cmdsplit == "clear":
         os.system('cls' if os.name == 'nt' else 'clear')
     elif cmdsplit[0] == "help":
-        p('stock|get|stockinfo <stockname> [getpreviousinfo:week|month|day]         get stock info about a specific stock      stockname is required, getprevious info is optional')
-        p('names|stocks|abbr                                                    shows list of popular stocks')
-        p('cls|clear                                                            clear terminal')
-        p('exit                                                                 exits')
+        help()
     else:
         p('not a command (use "help" to list commands)')
